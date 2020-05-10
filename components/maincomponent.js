@@ -3,6 +3,8 @@ import React, { Component } from "react";
 import Menu from "./menucomponent";
 import Home from "./HomeComponent";
 import DishDetail from "./DishDetail";
+import Aboutus from "./Aboutus";
+import Contactus from "./Contactus";
 import { View, Platform } from "react-native";
 import { createStackNavigator } from "react-navigation-stack";
 import { createAppContainer } from "react-navigation";
@@ -35,6 +37,42 @@ const navigator = createDrawerNavigator(
       {
         navigationOptions: {
           drawerLabel: "Menu",
+          headerStyle: {
+            backgroundColor: "#512DA8",
+          },
+          headerTintColor: "#fff",
+          headerTitleStyle: {
+            color: "#fff",
+          },
+        },
+      }
+    ),
+    Aboutpage: createStackNavigator(
+      {
+        Aboutus: Aboutus,
+      },
+      {
+        navigationOptions: {
+          title: "About us",
+          drawerLabel: "About us",
+          headerStyle: {
+            backgroundColor: "#512DA8",
+          },
+          headerTintColor: "#fff",
+          headerTitleStyle: {
+            color: "#fff",
+          },
+        },
+      }
+    ),
+    contactpage: createStackNavigator(
+      {
+        Contactus: Contactus,
+      },
+      {
+        navigationOptions: {
+          title: "Contact us",
+          drawerLabel: "Contact us",
           headerStyle: {
             backgroundColor: "#512DA8",
           },
