@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { Text, View } from "react-native";
+import { Text, View, StyleSheet } from "react-native";
 import { Card } from "react-native-elements";
 import { DISHES } from "../shared/dishes";
 
@@ -11,7 +11,7 @@ function RenderDish(props) {
         featuredTitle={dish.name}
         image={require("./images/uthappizza.png")}
       >
-        <Text style={{ margin: 10 }}>{dish.description}</Text>
+        <Text style={styles.description}>{dish.description}</Text>
       </Card>
     );
   } else {
@@ -35,5 +35,11 @@ class DishDetail extends Component {
     return <RenderDish dish={this.state.dishes[+dishId]}></RenderDish>;
   }
 }
+
+const styles = StyleSheet.create({
+  description: {
+    margin: 10,
+  },
+});
 
 export default DishDetail;
