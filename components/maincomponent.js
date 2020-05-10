@@ -1,38 +1,63 @@
 import "react-native-gesture-handler";
 import React, { Component } from "react";
 import Menu from "./menucomponent";
-import { DISHES } from "../shared/dishes";
+import Home from "./HomeComponent";
 import DishDetail from "./DishDetail";
 import { View, Platform } from "react-native";
 import { createStackNavigator } from "react-navigation-stack";
 import { createAppContainer } from "react-navigation";
-
-const navigator = createStackNavigator(
+import { createDrawerNavigator } from "react-navigation-drawer";
+const navigator = createDrawerNavigator(
   {
-    menu: Menu,
-    dishdetail: DishDetail,
+    Homeflow: createStackNavigator(
+      {
+        Home: Home,
+      },
+      {
+        navigationOptions: {
+          title: "Home",
+          drawerLabel: "Home",
+          headerStyle: {
+            backgroundColor: "#512DA8",
+          },
+          headerTintColor: "#fff",
+          headerTitleStyle: {
+            color: "#fff",
+          },
+        },
+      }
+    ),
+    Menuflow: createStackNavigator(
+      {
+        menu: Menu,
+        dishdetail: DishDetail,
+      },
+      {
+        navigationOptions: {
+          drawerLabel: "Menu",
+          headerStyle: {
+            backgroundColor: "#512DA8",
+          },
+          headerTintColor: "#fff",
+          headerTitleStyle: {
+            color: "#fff",
+          },
+        },
+      }
+    ),
   },
   {
-    intialRouteName: "menu",
-    navigationOptions: {
-      headerStyle: {
-        backgroundColor: "#512DA8",
-      },
-      headerTintColor: "#fff",
-      headerTitleStyle: {
-        color: "#fff",
-      },
-    },
+    drawerBackgroundColor: "#D1C4E9",
   }
 );
 
-const MenuNavigator = createAppContainer(navigator);
+const MainNavigator = createAppContainer(navigator);
 
 class Main extends Component {
   render() {
     return (
       <View style={{ flex: 1, paddingTop: Expo.Constants.statusBarHeight }}>
-        <MenuNavigator></MenuNavigator>
+        <MainNavigator></MainNavigator>
       </View>
     );
   }
