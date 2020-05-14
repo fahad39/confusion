@@ -57,13 +57,6 @@ class Aboutus extends Component {
             the world's best cuisines in a pan.
           </Text>
         </Card>
-        {/* <FlatList
-          data={this.state.leaders}
-          renderItem={RenderItem}
-          keyExtractor={(item,heading) => {item.id.toString()
-        heading}}
-        ></FlatList> */}
-
         <RenderItem
           item={this.state.leaders}
           heading={this.state.cardhead}
