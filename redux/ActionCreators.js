@@ -2,7 +2,8 @@ import * as ActionTypes from "./ActionTypes";
 import { baseUrl } from "../shared/baseUrl";
 
 export const fetchComments = () => (dispatch) => {
-  return fetch(baseUrl + "comments")
+  console.log(baseUrl + "comments");
+  return fetch(baseUrl + "/comments")
     .then(
       (response) => {
         if (response.ok) {
@@ -37,8 +38,8 @@ export const addComments = (comments) => ({
 
 export const fetchDishes = () => (dispatch) => {
   dispatch(dishesLoading());
-
-  return fetch(baseUrl + "dishes")
+  console.log(baseUrl + "dishes");
+  return fetch(baseUrl + "/dishes")
     .then(
       (response) => {
         if (response.ok) {
@@ -77,8 +78,8 @@ export const addDishes = (dishes) => ({
 
 export const fetchPromos = () => (dispatch) => {
   dispatch(promosLoading());
-
-  return fetch(baseUrl + "promotions")
+  console.log(baseUrl + "promotions");
+  return fetch(baseUrl + "/promotions")
     .then(
       (response) => {
         if (response.ok) {
@@ -118,7 +119,7 @@ export const addPromos = (promos) => ({
 export const fetchLeaders = () => (dispatch) => {
   dispatch(leadersLoading());
 
-  return fetch(baseUrl + "leaders")
+  return fetch(baseUrl + "/leaders")
     .then(
       (response) => {
         if (response.ok) {

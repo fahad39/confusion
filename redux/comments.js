@@ -3,7 +3,7 @@ import * as ActionTypes from "./ActionTypes";
 export const comments = (
   state = {
     errMess: null,
-    commets: [],
+    comments: [],
   },
   action
 ) => {

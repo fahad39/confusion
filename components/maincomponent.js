@@ -2,23 +2,40 @@ import "react-native-gesture-handler";
 import React, { Component } from "react";
 import Menu from "./menucomponent";
 import Home from "./HomeComponent";
+import Reservation from "./ReservationComponent";
 import DishDetail from "./DishDetail";
 import Aboutus from "./Aboutus";
 import Contactus from "./Contactus";
-import {
-  View,
-  Platform,
-  Image,
-  Text,
-  StyleSheet,
-  ScrollView,
-} from "react-native";
+import { View, Image, Text, StyleSheet, ScrollView } from "react-native";
 import { createStackNavigator } from "react-navigation-stack";
 import { createAppContainer } from "react-navigation";
 import { createDrawerNavigator, DrawerItems } from "react-navigation-drawer";
 import SafeAreaView from "react-native-safe-area-view";
 import { Icon } from "react-native-elements";
+import { connect } from "react-redux";
+import { baseUrl } from "../shared/baseUrl";
+import {
+  fetchDishes,
+  fetchComments,
+  fetchPromos,
+  fetchLeaders,
+} from "../redux/ActionCreators";
 
+const mapStateToProps = (state) => {
+  return {
+    dishes: state.dishes,
+    comments: state.comments,
+    promotions: state.promotions,
+    leaders: state.leaders,
+  };
+};
+
+const mapDispatchToProps = (dispatch) => ({
+  fetchDishes: () => dispatch(fetchDishes()),
+  fetchComments: () => dispatch(fetchComments()),
+  fetchPromos: () => dispatch(fetchPromos()),
+  fetchLeaders: () => dispatch(fetchLeaders()),
+});
 const CustomDrawerContentComponent = (props) => (
   <ScrollView>
     <SafeAreaView
@@ -28,7 +45,7 @@ const CustomDrawerContentComponent = (props) => (
       <View style={styles.drawerHeader}>
         <View style={{ flex: 1 }}>
           <Image
-            source={require("./images/res.png")}
+            source={{ uri: baseUrl + "/images/logo.png" }}
             style={styles.drawerImage}
           ></Image>
         </View>
@@ -185,6 +202,40 @@ const navigator = createDrawerNavigator(
         }),
       }
     ),
+    ReservationPage: createStackNavigator(
+      {
+        Reservation: Reservation,
+      },
+      {
+        navigationOptions: ({ navigtion }) => ({
+          headerLeft: () => (
+            <Icon
+              name="menu"
+              size={24}
+              color="white"
+              onPress={() => navigation.toggleDrawer()}
+            ></Icon>
+          ),
+          title: "Reserve Table",
+          drawerLabel: "Reserve Table",
+          drawerIcon: ({ tintColor }) => (
+            <Icon
+              name="cutlery"
+              type="font-awesome"
+              size={22}
+              color={tintColor}
+            ></Icon>
+          ),
+          headerStyle: {
+            backgroundColor: "#512DA8",
+          },
+          headerTintColor: "#fff",
+          headerTitleStyle: {
+            color: "#fff",
+          },
+        }),
+      }
+    ),
   },
   {
     drawerBackgroundColor: "#D1C4E9",
@@ -219,6 +270,13 @@ const styles = StyleSheet.create({
 const MainNavigator = createAppContainer(navigator);
 
 class Main extends Component {
+  componentDidMount() {
+    this.props.fetchDishes();
+    this.props.fetchComments();
+    this.props.fetchPromos();
+    this.props.fetchLeaders();
+  }
+
   render() {
     return (
       <View style={{ flex: 1, paddingTop: Expo.Constants.statusBarHeight }}>
@@ -228,4 +286,4 @@ class Main extends Component {
   }
 }
 
-export default Main;
+export default connect(mapStateToProps, mapDispatchToProps)(Main);
