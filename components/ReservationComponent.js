@@ -12,7 +12,6 @@ import {
 import { Card } from "react-native-elements";
 
 import DatePicker from "react-native-datepicker";
-//import "react-datepicker/dist/react-datepicker.css";
 
 class Reservation extends Component {
   constructor(props) {

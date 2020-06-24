@@ -1,41 +1,29 @@
-import React, { Component } from "react";
-import { Text, View, StyleSheet, ScrollView, FlatList } from "react-native";
-import { Card, Icon } from "react-native-elements";
+import React, { Component, useState } from "react";
+import {
+  Text,
+  View,
+  StyleSheet,
+  ScrollView,
+  FlatList,
+  Modal,
+  Button,
+} from "react-native";
+import { Card, Icon, AirbnbRating, Input } from "react-native-elements";
 import { connect } from "react-redux";
 import { baseUrl } from "../shared/baseUrl";
+import { postComment } from "../redux/ActionCreators";
 
 const mapStateToProps = (state) => {
   return {
     dishes: state.dishes,
     comments: state.comments,
+    addComment: state.addComment,
   };
 };
 
-function RenderDish(props) {
-  const dish = props.dish;
-  if (dish != null) {
-    return (
-      <Card
-        featuredTitle={dish.name}
-        image={{ uri: baseUrl + "/" + dish.image }}
-      >
-        <Text style={styles.description}>{dish.description}</Text>
-        <Icon
-          raised
-          reverse
-          name={props.favorite ? "heart" : "heart-o"}
-          type="font-awesome"
-          color="#f50"
-          onPress={() =>
-            props.favorite ? console.log("already favorite") : props.onPress()
-          }
-        ></Icon>
-      </Card>
-    );
-  } else {
-    return <View></View>;
-  }
-}
+const mapDispatchToProps = (dispatch) => ({
+  postComment: (comment) => dispatch(postComment(comment)),
+});
 
 function RenderComments(props) {
   const comments = props.comments;
@@ -56,8 +44,8 @@ function RenderComments(props) {
     <Card title="Comments">
       <FlatList
         data={comments}
-        renderItem={renderCommentItem}
         keyExtractor={(item) => item.id.toString()}
+        renderItem={renderCommentItem}
       />
     </Card>
   );
@@ -68,11 +56,35 @@ class DishDetail extends Component {
     super(props);
     this.state = {
       favorites: [],
+      showModal: false,
+      rating: 1,
+      dishId: 0,
+      comment: "",
+      author: "",
+      date: "",
     };
   }
 
+  modaltoggle() {
+    this.setState({ showModal: !this.state.showModal });
+  }
   markFavorite(dishId) {
     this.setState({ favorites: this.state.favorites.concat(dishId) });
+  }
+
+  resetform() {
+    this.modaltoggle();
+    var d = new Date();
+    var n = d.toISOString();
+    this, this.setState({ date: n });
+    console.log("In dish detail activating post comment");
+    this.props.postComment({
+      dishId: this.state.dishId,
+      rating: this.state.rating,
+      comment: this.state.comment,
+      author: this.state.author,
+      date: this.state.date,
+    });
   }
 
   static navigationOptions = {
@@ -81,27 +93,108 @@ class DishDetail extends Component {
   render() {
     const dishId = this.props.navigation.getParam("dishId", "");
 
+    const dish = this.props.dishes.dishes[+dishId];
+    const favorite = this.state.favorites.some((el) => el === dishId);
     return (
-      <FlatList
-        ListHeaderComponent={
-          <>
-            <RenderDish
-              dish={this.props.dishes.dishes[+dishId]}
-              favorite={this.state.favorites.some((el) => el === dishId)}
-              onPress={() => this.markFavorite(dishId)}
-            />
-          </>
-        }
-        ListFooterComponent={
-          <>
-            <RenderComments
-              comments={this.props.comments.comments.filter(
-                (comment) => comment.dishId === dishId
-              )}
-            />
-          </>
-        }
-      ></FlatList>
+      <ScrollView>
+        <Card
+          featuredTitle={dish.name}
+          image={{ uri: baseUrl + "/" + dish.image }}
+        >
+          <Text style={styles.description}>{dish.description}</Text>
+          <View style={styles.iconstyle}>
+            <Icon
+              raised
+              reverse
+              name={favorite ? "heart" : "heart-o"}
+              type="font-awesome"
+              color="#f50"
+              onPress={() =>
+                favorite ? console.log("already favorite") : onPress()
+              }
+            ></Icon>
+            <Icon
+              raised
+              reverse
+              name={"pencil"}
+              type="font-awesome"
+              color="#f50"
+              onPress={() => {
+                this.modaltoggle();
+                this.setState({ dishId: dishId });
+              }}
+            ></Icon>
+          </View>
+        </Card>
+
+        <View>
+          <Modal
+            animationType={"slide"}
+            transparent={false}
+            onDismiss={() => this.modaltoggle()}
+            onRequestClose={() => this.modaltoggle()}
+            visible={this.state.showModal}
+          >
+            <View>
+              <AirbnbRating
+                count={5}
+                reviews={[
+                  "rating 1/5",
+                  "rating 2/5",
+                  "rating 3/5",
+                  "rating 4/5",
+                  "rating 5/5",
+                ]}
+                defaultRating={1}
+                size={30}
+                onFinishRating={(ratings) => {
+                  this.setState({ rating: ratings });
+                }}
+              ></AirbnbRating>
+              <Input
+                placeholder="Author"
+                leftIcon={{ type: "font-awesome", name: "user" }}
+                onChangeText={(Author) => {
+                  this.setState({ author: Author });
+                }}
+              ></Input>
+              <Input
+                placeholder="Comments"
+                leftIcon={{ type: "font-awesome", name: "comment-o" }}
+                onChangeText={(comments) => {
+                  this.setState({ comment: comments });
+                }}
+              ></Input>
+
+              <Button
+                title="Submit"
+                color="#512DA8"
+                onPress={() => this.resetform()}
+              ></Button>
+              <View style={styles.Spacer}></View>
+              <Button
+                style={styles.modalbutton}
+                onPress={() => this.modaltoggle()}
+                title="Close"
+                color="#512DA8"
+                width="50"
+              ></Button>
+            </View>
+          </Modal>
+        </View>
+        <FlatList
+          ListHeaderComponent={<></>}
+          ListFooterComponent={
+            <>
+              <RenderComments
+                comments={this.props.comments.comments.filter(
+                  (comment) => comment.dishId === this.state.dishId
+                )}
+              />
+            </>
+          }
+        ></FlatList>
+      </ScrollView>
     );
   }
 }
@@ -110,6 +203,16 @@ const styles = StyleSheet.create({
   description: {
     margin: 10,
   },
+  Spacer: {
+    margin: 10,
+  },
+  iconstyle: {
+    flexDirection: "row",
+    justifyContent: "center",
+  },
+  modalbutton: {
+    width: 50,
+  },
 });
 
-export default connect(mapStateToProps)(DishDetail);
+export default connect(mapStateToProps, mapDispatchToProps)(DishDetail);

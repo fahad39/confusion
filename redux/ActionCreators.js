@@ -155,3 +155,22 @@ export const addLeaders = (leaders) => ({
   type: ActionTypes.ADD_LEADERS,
   payload: leaders,
 });
+export const postComment = (dishId, rating, author, comment) => (dispatch) => {
+  console.log("in post comment method");
+  const newComment = {
+    dishId: dishId,
+    rating: rating,
+    author: author,
+    comment: comment,
+  };
+
+  //console.log("going to dispatch add comment method");
+  setTimeout(() => {
+    dispatch(addComment(newComment));
+  }, 2000);
+};
+
+export const addComment = (comment) => ({
+  type: ActionTypes.ADD_COMMENT,
+  payload: comment,
+});

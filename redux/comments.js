@@ -22,6 +22,11 @@ export const comments = (
         errMess: action.payload,
         comments: [],
       };
+    case ActionTypes.ADD_COMMENT:
+      // console.log("in comment.js inside add comment");
+      const { comments } = state;
+      const comment = { id: comments.length, ...action.payload };
+      return { ...state, comments: comments.concat(comment) };
     default:
       return state;
   }
