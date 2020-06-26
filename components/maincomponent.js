@@ -3,6 +3,7 @@ import React, { Component } from "react";
 import Menu from "./menucomponent";
 import Home from "./HomeComponent";
 import Reservation from "./ReservationComponent";
+import Favorites from "./FavoriteComponent";
 import DishDetail from "./DishDetail";
 import Aboutus from "./Aboutus";
 import Contactus from "./Contactus";
@@ -27,6 +28,7 @@ const mapStateToProps = (state) => {
     comments: state.comments,
     promotions: state.promotions,
     leaders: state.leaders,
+    favorites: state.favorites,
   };
 };
 
@@ -173,7 +175,7 @@ const navigator = createDrawerNavigator(
         Contactus: Contactus,
       },
       {
-        navigationOptions: ({ navigtion }) => ({
+        navigationOptions: ({ navigation }) => ({
           headerLeft: () => (
             <Icon
               name="menu"
@@ -202,12 +204,46 @@ const navigator = createDrawerNavigator(
         }),
       }
     ),
+    FavoritesPage: createStackNavigator(
+      {
+        Favorites: Favorites,
+      },
+      {
+        navigationOptions: ({ navigation }) => ({
+          headerLeft: () => (
+            <Icon
+              name="menu"
+              size={24}
+              color="white"
+              onPress={() => navigation.toggleDrawer()}
+            ></Icon>
+          ),
+          title: "My Favorite",
+          drawerLabel: "My Favorite",
+          drawerIcon: ({ tintColor }) => (
+            <Icon
+              name="heart"
+              type="font-awesome"
+              size={22}
+              color={tintColor}
+            ></Icon>
+          ),
+          headerStyle: {
+            backgroundColor: "#512DA8",
+          },
+          headerTintColor: "#fff",
+          headerTitleStyle: {
+            color: "#fff",
+          },
+        }),
+      }
+    ),
     ReservationPage: createStackNavigator(
       {
         Reservation: Reservation,
       },
       {
-        navigationOptions: ({ navigtion }) => ({
+        navigationOptions: ({ navigation }) => ({
           headerLeft: () => (
             <Icon
               name="menu"

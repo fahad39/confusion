@@ -12,17 +12,20 @@ import { Card, Icon, AirbnbRating, Input } from "react-native-elements";
 import { connect } from "react-redux";
 import { baseUrl } from "../shared/baseUrl";
 import { postComment } from "../redux/ActionCreators";
+import { postFavorite } from "../redux/ActionCreators";
 
 const mapStateToProps = (state) => {
   return {
     dishes: state.dishes,
     comments: state.comments,
     addComment: state.addComment,
+    favorites: state.favorites,
   };
 };
 
 const mapDispatchToProps = (dispatch) => ({
   postComment: (comment) => dispatch(postComment(comment)),
+  postFavorite: (dishId) => dispatch(postFavorite(dishId)),
 });
 
 function RenderComments(props) {
@@ -69,7 +72,7 @@ class DishDetail extends Component {
     this.setState({ showModal: !this.state.showModal });
   }
   markFavorite(dishId) {
-    this.setState({ favorites: this.state.favorites.concat(dishId) });
+    this.props.postFavorite(dishId);
   }
 
   resetform() {
@@ -110,7 +113,9 @@ class DishDetail extends Component {
               type="font-awesome"
               color="#f50"
               onPress={() =>
-                favorite ? console.log("already favorite") : onPress()
+                favorite
+                  ? console.log("already favorite")
+                  : this.markFavorite(dishId)
               }
             ></Icon>
             <Icon
