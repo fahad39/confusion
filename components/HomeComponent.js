@@ -61,7 +61,7 @@ class Home extends Component {
     this.ainmatedValue.setValue(0);
     Animated.timing(this.ainmatedValue, {
       toValue: 8,
-      duration: 8000,
+      duration: 7000,
       easing: Easing.linear,
     }).start(() => this.animate());
   }

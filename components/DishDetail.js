@@ -13,6 +13,7 @@ import { connect } from "react-redux";
 import { baseUrl } from "../shared/baseUrl";
 import { postComment } from "../redux/ActionCreators";
 import { postFavorite } from "../redux/ActionCreators";
+import * as Animatable from "react-native-animatable";
 
 const mapStateToProps = (state) => {
   return {
@@ -45,11 +46,13 @@ function RenderComments(props) {
 
   return (
     <Card title="Comments">
-      <FlatList
-        data={comments}
-        keyExtractor={(item) => item.id.toString()}
-        renderItem={renderCommentItem}
-      />
+      <Animatable.View animation="fadeInUp" duration={2000} delay={1000}>
+        <FlatList
+          data={comments}
+          keyExtractor={(item) => item.id.toString()}
+          renderItem={renderCommentItem}
+        />
+      </Animatable.View>
     </Card>
   );
 }
@@ -100,105 +103,107 @@ class DishDetail extends Component {
     const favorite = this.state.favorites.some((el) => el === dishId);
     return (
       <ScrollView>
-        <Card
-          featuredTitle={dish.name}
-          image={{ uri: baseUrl + "/" + dish.image }}
-        >
-          <Text style={styles.description}>{dish.description}</Text>
-          <View style={styles.iconstyle}>
-            <Icon
-              raised
-              reverse
-              name={favorite ? "heart" : "heart-o"}
-              type="font-awesome"
-              color="#f50"
-              onPress={() =>
-                favorite
-                  ? console.log("already favorite")
-                  : this.markFavorite(dishId)
-              }
-            ></Icon>
-            <Icon
-              raised
-              reverse
-              name={"pencil"}
-              type="font-awesome"
-              color="#f50"
-              onPress={() => {
-                this.modaltoggle();
-                this.setState({ dishId: dishId });
-              }}
-            ></Icon>
-          </View>
-        </Card>
-
-        <View>
-          <Modal
-            animationType={"slide"}
-            transparent={false}
-            onDismiss={() => this.modaltoggle()}
-            onRequestClose={() => this.modaltoggle()}
-            visible={this.state.showModal}
+        <Animatable.View animation="fadeInDown" duration={2000} delay={1000}>
+          <Card
+            featuredTitle={dish.name}
+            image={{ uri: baseUrl + "/" + dish.image }}
           >
-            <View>
-              <AirbnbRating
-                count={5}
-                reviews={[
-                  "rating 1/5",
-                  "rating 2/5",
-                  "rating 3/5",
-                  "rating 4/5",
-                  "rating 5/5",
-                ]}
-                defaultRating={1}
-                size={30}
-                onFinishRating={(ratings) => {
-                  this.setState({ rating: ratings });
+            <Text style={styles.description}>{dish.description}</Text>
+            <View style={styles.iconstyle}>
+              <Icon
+                raised
+                reverse
+                name={favorite ? "heart" : "heart-o"}
+                type="font-awesome"
+                color="#f50"
+                onPress={() =>
+                  favorite
+                    ? console.log("already favorite")
+                    : this.markFavorite(dishId)
+                }
+              ></Icon>
+              <Icon
+                raised
+                reverse
+                name={"pencil"}
+                type="font-awesome"
+                color="#f50"
+                onPress={() => {
+                  this.modaltoggle();
+                  this.setState({ dishId: dishId });
                 }}
-              ></AirbnbRating>
-              <Input
-                placeholder="Author"
-                leftIcon={{ type: "font-awesome", name: "user" }}
-                onChangeText={(Author) => {
-                  this.setState({ author: Author });
-                }}
-              ></Input>
-              <Input
-                placeholder="Comments"
-                leftIcon={{ type: "font-awesome", name: "comment-o" }}
-                onChangeText={(comments) => {
-                  this.setState({ comment: comments });
-                }}
-              ></Input>
-
-              <Button
-                title="Submit"
-                color="#512DA8"
-                onPress={() => this.resetform()}
-              ></Button>
-              <View style={styles.Spacer}></View>
-              <Button
-                style={styles.modalbutton}
-                onPress={() => this.modaltoggle()}
-                title="Close"
-                color="#512DA8"
-                width="50"
-              ></Button>
+              ></Icon>
             </View>
-          </Modal>
-        </View>
-        <FlatList
-          ListHeaderComponent={<></>}
-          ListFooterComponent={
-            <>
-              <RenderComments
-                comments={this.props.comments.comments.filter(
-                  (comment) => comment.dishId === this.state.dishId
-                )}
-              />
-            </>
-          }
-        ></FlatList>
+          </Card>
+
+          <View>
+            <Modal
+              animationType={"slide"}
+              transparent={false}
+              onDismiss={() => this.modaltoggle()}
+              onRequestClose={() => this.modaltoggle()}
+              visible={this.state.showModal}
+            >
+              <View>
+                <AirbnbRating
+                  count={5}
+                  reviews={[
+                    "rating 1/5",
+                    "rating 2/5",
+                    "rating 3/5",
+                    "rating 4/5",
+                    "rating 5/5",
+                  ]}
+                  defaultRating={1}
+                  size={30}
+                  onFinishRating={(ratings) => {
+                    this.setState({ rating: ratings });
+                  }}
+                ></AirbnbRating>
+                <Input
+                  placeholder="Author"
+                  leftIcon={{ type: "font-awesome", name: "user" }}
+                  onChangeText={(Author) => {
+                    this.setState({ author: Author });
+                  }}
+                ></Input>
+                <Input
+                  placeholder="Comments"
+                  leftIcon={{ type: "font-awesome", name: "comment-o" }}
+                  onChangeText={(comments) => {
+                    this.setState({ comment: comments });
+                  }}
+                ></Input>
+
+                <Button
+                  title="Submit"
+                  color="#512DA8"
+                  onPress={() => this.resetform()}
+                ></Button>
+                <View style={styles.Spacer}></View>
+                <Button
+                  style={styles.modalbutton}
+                  onPress={() => this.modaltoggle()}
+                  title="Close"
+                  color="#512DA8"
+                  width="50"
+                ></Button>
+              </View>
+            </Modal>
+          </View>
+          <FlatList
+            ListHeaderComponent={<></>}
+            ListFooterComponent={
+              <>
+                <RenderComments
+                  comments={this.props.comments.comments.filter(
+                    (comment) => comment.dishId === this.state.dishId
+                  )}
+                />
+              </>
+            }
+          ></FlatList>
+        </Animatable.View>
       </ScrollView>
     );
   }
