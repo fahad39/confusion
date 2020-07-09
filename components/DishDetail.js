@@ -104,8 +104,15 @@ class DishDetail extends Component {
     const dish = this.props.dishes.dishes[+dishId];
     const favorite = this.state.favorites.some((el) => el === dishId);
 
+    const handleViewRef = (ref) => (this.view = ref);
+
     const recognizeDrag = ({ moveX, moveY, dx, dy }) => {
       if (dx < -200) return true;
+      else return false;
+    };
+
+    const recognizeComment = ({ moveX, moveY, dx, dy }) => {
+      if (dx > -200) return true;
       else return false;
     };
 
@@ -113,6 +120,14 @@ class DishDetail extends Component {
       onStartShouldSetPanResponder: (e, gestureState) => {
         return true;
       },
+      onPanResponderGrant: () => {
+        this.view
+          .rubberBand(1000)
+          .then((endState) =>
+            console.log(endState.finished ? "Finished" : "Cancelled")
+          );
+      },
+
       onPanResponderEnd: (e, gestureState) => {
         if (recognizeDrag(gestureState))
           Alert.alert(
@@ -134,6 +149,7 @@ class DishDetail extends Component {
             ],
             { cancelable: false }
           );
+        if (recognizeComment(gestureState)) this.modaltoggle();
         return true;
       },
     });
@@ -143,6 +159,7 @@ class DishDetail extends Component {
           animation="fadeInDown"
           duration={2000}
           delay={1000}
+          ref={handleViewRef}
           {...panResponder.panHandlers}
         >
           <Card

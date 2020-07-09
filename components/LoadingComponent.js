@@ -17,7 +17,6 @@ const styles = StyleSheet.create({
 export const Loading = () => {
   return (
     <View style={styles.loadingView}>
-      <Text>console.log("in loading")</Text>
       <ActivityIndicator size="large" color="#541bde" />
       <Text style={styles.loadingText}>Loading . . .</Text>
     </View>

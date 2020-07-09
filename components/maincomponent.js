@@ -4,6 +4,7 @@ import Menu from "./menucomponent";
 import Home from "./HomeComponent";
 import Reservation from "./ReservationComponent";
 import Favorites from "./FavoriteComponent";
+import login from "./LoginComponent";
 import DishDetail from "./DishDetail";
 import Aboutus from "./Aboutus";
 import Contactus from "./Contactus";
@@ -62,6 +63,41 @@ const CustomDrawerContentComponent = (props) => (
 
 const navigator = createDrawerNavigator(
   {
+    Loginflow: createStackNavigator(
+      {
+        Login: login,
+      },
+      {
+        navigationOptions: ({ navigation }) => ({
+          headerLeft: () => (
+            <Icon
+              name="menu"
+              size={24}
+              color="black"
+              onPress={() => navigation.toggleDrawer()}
+            ></Icon>
+          ),
+
+          title: "Login",
+          drawerLabel: "Login",
+          drawerIcon: ({ tintColor }) => (
+            <Icon
+              name="sign-in"
+              type="font-awesome"
+              size={24}
+              color={tintColor}
+            ></Icon>
+          ),
+          headerStyle: {
+            backgroundColor: "#512DA8",
+          },
+          headerTintColor: "#fff",
+          headerTitleStyle: {
+            color: "#fff",
+          },
+        }),
+      }
+    ),
     Homeflow: createStackNavigator(
       {
         Home: Home,
@@ -274,6 +310,7 @@ const navigator = createDrawerNavigator(
     ),
   },
   {
+    initialRouteName: "Homeflow",
     drawerBackgroundColor: "#D1C4E9",
     contentComponent: CustomDrawerContentComponent,
   }
